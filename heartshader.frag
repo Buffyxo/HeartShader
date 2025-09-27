@@ -8,6 +8,19 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     // Stretch x so that the shape isn’t distorted if the screen isn’t square
     uv.x *= iResolution.x / iResolution.y;
 
+    // Make the heart "pulse" (grow and shrink slightly)
+    // pulse = 1 + 0.03 * sin(iTime * 3)
+    //   - sin(iTime * 3) moves smoothly between -1 and 1
+    //   - multiplying by 0.03 makes it a small change (about ±3%)
+    //   - adding 1 shifts it so the final range is roughly 0.97 → 1.03
+    float pulse = 1.0 + 0.03 * sin(iTime * 3.0);
+
+    // Divide the coordinates by "pulse"
+    //   - when pulse > 1 → heart looks smaller
+    //   - when pulse < 1 → heart looks bigger
+    // Together this creates a repeating "beating" effect
+    uv /= pulse;
+
     // Define x and y from our coordinate system
     float x = uv.x;
     float y = uv.y;
